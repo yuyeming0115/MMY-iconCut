@@ -1,0 +1,20 @@
+# ===== PyInstaller 生成物 =====
+build/
+dist/
+*.spec
+__pycache__/
+*.pyc
+
+# ===== 生成的图标（由 tools/make_icons.py 从 PNG 重新生成） =====
+图标/*.ico
+图标/*.icns
+
+# ===== 系统/IDE =====
+.DS_Store
+Thumbs.db
+.workbuddy/
+.trae/
+
+# ===== 本地临时 =====
+*.log
+.cache/
