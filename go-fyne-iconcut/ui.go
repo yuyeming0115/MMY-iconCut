@@ -118,7 +118,7 @@ type appState struct {
 	pix      *PixCanvas
 	status   *widget.Label
 	pickLbl  *widget.Label
-	scroll   *widget.Scroll
+	scroll   *container.Scroll
 }
 
 func clamp(v, lo, hi int) int {

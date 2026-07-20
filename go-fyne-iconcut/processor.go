@@ -264,7 +264,8 @@ func ComposeAlpha(hit *Mask, protect *Mask, feather int) []byte {
 
 // ApplyAlpha 把 alpha 应用到图像副本。
 func ApplyAlpha(src *image.RGBA, alpha []byte) *image.RGBA {
-	out := src.Copy()
+	out := image.NewRGBA(src.Bounds())
+	copy(out.Pix, src.Pix)
 	for i := 0; i < len(alpha); i++ {
 		out.Pix[i*4+3] = alpha[i]
 	}

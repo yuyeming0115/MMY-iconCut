@@ -45,12 +45,12 @@ chmod +x build-go.sh
 | 方案 | 单文件 exe | 说明 |
 |------|-----------|------|
 | Python + PySide6 (PyInstaller) | ~107 MB | 打包 CPython + Qt6 |
-| **Go + Fyne** | ~15–25 MB（预估，待本机构建确认） | Fyne v2 单文件、无需外部 DLL，约为原体积的 1/4–1/7 |
+| **Go + Fyne** | **21.9 MB（实测）** | Fyne v2 单文件、静态链接无外部 DLL，约为原体积的 1/5 |
 
-> 预估依据：Fyne v2 最小窗口程序在 Windows 上经 `go build -ldflags="-s -w"` 通常约 12–20 MB，
-> 本原型仅用标准库做图像处理，增量极小。
-> 注：本原型尚未在 CI/沙箱实机构建——Fyne 依赖 CGO，需 Go + MinGW 工具链，而当前沙箱对单次下载有大小上限，无法拉全工具链。
-> 请按下方步骤在本机构建，即可得到真实体积并填入上表。
+> 实测（2026-07-20，Windows + Go 1.23.4 + winlibs MinGW-w64 UCRT64 gcc 16.1.0）：
+> 构建命令 `go build -ldflags="-H=windowsgui -s -w -extldflags=-static"`，产物 `bin/iconCut-go.exe` = 22,986,752 字节 ≈ **21.9 MB**；
+> 经 `objdump` / `strings` 校验为静态链接、无外部 MinGW 运行时 DLL，是真正的单文件可移植 exe。
+> 约为 PySide6 版（~107 MB）的 **1/5**，达成原型目标。
 
 ## 已知限制（原型阶段）
 - 未设置自定义窗口/文件图标（沿用 Fyne 默认），正式版需补 `.ico`/`.icns`
