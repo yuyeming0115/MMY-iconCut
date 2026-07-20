@@ -1,0 +1,5 @@
+# 保持脚本换行符正确,避免跨平台构建失败
+*.sh   text eol=lf
+*.bat  text eol=crlf
+go.mod text eol=lf
+*.go   text eol=lf
