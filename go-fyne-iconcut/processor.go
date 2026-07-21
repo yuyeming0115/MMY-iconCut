@@ -5,9 +5,11 @@ package main
 import (
 	"image"
 	"image/color"
+	"image/jpeg"
 	"image/png"
 	"math"
 	"os"
+	"strings"
 )
 
 // Mask 单通道 0/1 掩膜。
@@ -34,18 +36,38 @@ func (m *Mask) Set(x, y int, v byte) {
 	m.Data[y*m.W+x] = v
 }
 
-// LoadRGBA 加载 PNG 为 *image.RGBA(已含 Alpha)。
+// LoadRGBA 加载图片(PNG/JPEG/BMP/GIF)为 *image.RGBA(已含 Alpha)。
 func LoadRGBA(path string) (*image.RGBA, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
 	defer f.Close()
-	img, err := png.Decode(f)
+
+	var img image.Image
+	switch strings.ToLower(filepathExt(path)) {
+	case ".jpg", ".jpeg":
+		img, err = jpeg.Decode(f)
+	default:
+		img, err = png.Decode(f)
+	}
 	if err != nil {
 		return nil, err
 	}
 	return toRGBA(img), nil
+}
+
+// filepathExt 返回路径的扩展名(小写,含点号)。不导入 path/filepath 避免循环。
+func filepathExt(path string) string {
+	for i := len(path) - 1; i >= 0; i-- {
+		if path[i] == '.' {
+			return path[i:]
+		}
+		if path[i] == '/' || path[i] == '\\' {
+			break
+		}
+	}
+	return ""
 }
 
 func toRGBA(img image.Image) *image.RGBA {
